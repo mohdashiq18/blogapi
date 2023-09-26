@@ -2,8 +2,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
 const app = express();
-const Connect=require("./Config")
+const {BlogModel} =require("./blogschema")
 const {BlogRoute}=require("./blogRoute")
+const Connect=require("./Config")
 const cors=require("cors")
 app.use(express.json());
 app.use(
@@ -33,13 +34,17 @@ app.post('/linkedin-data', async (req, res) => {
 
     // Create a JSON response object with labels
     const responseData = {
-      imageUrl,
-      description,
-      heading,
+      imgURL : imageUrl,
+      Discription : description,
+      Title : heading,
+      Url : url
     };
-console.log(responseData)
-    res.json(responseData);
+    console.log(responseData)
+    const data=new BlogModel(responseData)
+    await data.save()
+    res.send(data)
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Error fetching LinkedIn data' });
   }
 });
