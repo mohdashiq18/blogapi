@@ -37,9 +37,8 @@ app.post('/linkedin-data', async (req, res) => {
     const responseData = {
       imgURL : imageUrl,
       Discription : description,
-      Title : heading,
-      Url : url,
-      head,
+      Title : head ? head : heading,
+      Url : url
     };
     console.log(responseData)
     const data=new BlogModel(responseData)
