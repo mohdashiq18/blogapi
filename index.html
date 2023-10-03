@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Post Request</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p#responseMessage {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Send URL to post</h1>
+    <form>
+        <label for="urlInput">URL:</label>
+        <input type="text" id="urlInput" name="urlInput" placeholder="Enter URL">
+          <label for="urlInput">Heading:</label>
+        <input type="text" id="head" name="head" placeholder="Enter Heading">
+        <br>
+        <button type="button" onclick="sendApiRequest()">Post</button>
+    </form>
+
+    <p id="responseMessage"></p>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function sendApiRequest() {
+            const urlInput = document.getElementById("urlInput").value;
+            const head = document.getElementById("head").value;
+            const apiUrl = "https://apricot-agouti-tam.cyclic.cloud/linkedin-data";
+
+            // Create a data object with the URL in the "url" field
+            const data = {
+                url: urlInput,
+                head,
+            };
+console.log(data)
+            // Make a POST request to the API
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display a SweetAlert success message
+                Swal.fire({
+                    title: "Success!",
+                    text: data.message,
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    // Refresh the page when the SweetAlert popup is closed
+                    location.reload();
+                });
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                const responseMessage = document.getElementById("responseMessage");
+                responseMessage.textContent = "Error sending request.";
+            });
+        }
+    </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ app.use(
 app.use("/",BlogRoute)
 app.post('/linkedin-data', async (req, res) => {
   const { url } = req.body;
+  const {head}=req.body
 
   try {
     const linkedinResponse = await axios.get(url);
@@ -37,7 +38,8 @@ app.post('/linkedin-data', async (req, res) => {
       imgURL : imageUrl,
       Discription : description,
       Title : heading,
-      Url : url
+      Url : url,
+      head,
     };
     console.log(responseData)
     const data=new BlogModel(responseData)
