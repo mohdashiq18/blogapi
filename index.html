@@ -59,23 +59,58 @@
             font-weight: bold;
             color: #333;
         }
+        #form2{
+            display: none;
+        }
+        #button2{
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Send URL to post</h1>
-    <form>
+    <button id="button1" onclick="Manually()"> Post By Manually</button>
+    <button id="button2" onclick="Defult()">Post By Url</button>
+    <form id="form1">
         <label for="urlInput">URL:</label>
-        <input type="text" id="urlInput" name="urlInput" placeholder="Enter URL">
+        <input type="text" id="urlInput" name="urlInput" placeholder="Enter URL" required="true">
           <label for="urlInput">Heading:</label>
-        <input type="text" id="head" name="head" placeholder="Enter Heading">
+        <input type="text" id="head" name="head" placeholder="Enter Heading" required="true">
         <br>
         <button type="button" onclick="sendApiRequest()">Post</button>
     </form>
-
+    <form id="form2">
+        <label for="urlInput">URL:</label>
+        <input type="text" id="urlInput2" name="urlInput2" placeholder="Enter URL" required="true">
+          <label for="urlInput">Image Url:</label>
+        <input type="text" id="img" name="img" placeholder="Enter Image URL" required="true">
+        <label for="urlInput">Heading:</label>
+        <input type="text" id="hed" name="hed" placeholder="Enter Heading" required="true">
+        <label for="urlInput">Description:</label>
+        <input type="text" id="des" name="des" placeholder="Enter Description" required="true">
+        <br>
+        <button type="button" onclick="sendManuallyRequest() ">Post</button>
+    </form>
     <p id="responseMessage"></p>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
+  const form1=document.getElementById("form1")
+  const form2=document.getElementById("form2")
+  const but1=document.getElementById("button1")
+  const but2=document.getElementById("button2")
+        function Manually(){
+            form1.style.display="none"
+            form2.style.display="block"
+            but1.style.display="none"
+            but2.style.display="block"
+        }
+        function Defult(){
+            form1.style.display="block"
+            form2.style.display="none"
+            but1.style.display="block"
+            but2.style.display="none"
+        }
         function sendApiRequest() {
             const urlInput = document.getElementById("urlInput").value;
             const head = document.getElementById("head").value;
@@ -114,6 +149,50 @@ console.log(data)
                 responseMessage.textContent = "Error sending request.";
             });
         }
+        function sendManuallyRequest() {
+            const urlInput = document.getElementById("urlInput2").value;
+            const head = document.getElementById("hed").value;
+            const img = document.getElementById("img").value;
+            const des = document.getElementById("des").value;
+            const apiUrl = "http://localhost:3000/";
+
+            // Create a data object with the URL in the "url" field
+            const data = {
+                url: urlInput,
+                head,
+                img,
+                des
+                
+            };
+console.log(data)
+            // Make a POST request to the API
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display a SweetAlert success message
+                Swal.fire({
+                    title: "Success!",
+                    text: data.message,
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    // Refresh the page when the SweetAlert popup is closed
+                    location.reload();
+                });
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                const responseMessage = document.getElementById("responseMessage");
+                responseMessage.textContent = "Error sending request.";
+            });
+        }
+    
     </script>
 </body>
 </html>

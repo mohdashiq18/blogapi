@@ -13,6 +13,31 @@ app.use(
   })
 );
 app.use("/",BlogRoute)
+
+app.post('/', async (req, res) => {
+  const { url } = req.body;
+  const {head}=req.body
+  const { img } = req.body;
+  const {des}=req.body
+
+  try {
+   
+    const responseData = {
+      imgURL : img,
+      Discription : des,
+      Title : head ? head : heading,
+      Url : url
+    };
+    console.log(responseData)
+    const data=new BlogModel(responseData)
+    await data.save()
+    res.send(responseData)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Error fetching LinkedIn data' });
+  }
+});
+
 app.post('/linkedin-data', async (req, res) => {
   const { url } = req.body;
   const {head}=req.body
